@@ -146,7 +146,7 @@ export default function Auth() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Sign In - Friend Locator</title>
+        <title>Sign In</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
