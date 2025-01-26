@@ -20,6 +20,19 @@ import {
   GeoPoint,
   Timestamp
 } from 'firebase/firestore';
+import { GoogleMap, LoadScript, Marker, InfoWindow } from '@react-google-maps/api';
+
+const mapContainerStyle = {
+  width: '100%',
+  height: '500px',
+  marginTop: '2rem',
+  borderRadius: '12px',
+};
+
+const center = {
+  lat: 39.9529, // Default center (Philadelphia)
+  lng: -75.1910,
+};
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -30,14 +43,14 @@ export default function Home() {
   const [newFriendPhone, setNewFriendPhone] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedFriend, setSelectedFriend] = useState(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       setUser(user);
       setLoading(false);
       if (user) {
-        subscribeToFriends(user.uid);
-        startLocationUpdates();
+        loadFriendsLocations(user.uid);
       }
     });
 
@@ -207,36 +220,46 @@ export default function Home() {
     }
   };
 
-  const subscribeToFriends = (userId) => {
-    const userRef = doc(db, 'users', userId);
-    
-    onSnapshot(userRef, (doc) => {
-      if (doc.exists()) {
-        const friendPhones = doc.data().friends || [];
-        
-        friendPhones.forEach(phone => {
-          const locationsQuery = query(
-            collection(db, 'locations'),
-            where('phoneNumber', '==', phone)
-          );
+  const loadFriendsLocations = async (userId) => {
+    try {
+      // Get user's friends list
+      const userRef = doc(db, 'users', userId);
+      
+      onSnapshot(userRef, (doc) => {
+        if (doc.exists()) {
+          const friendPhones = doc.data().friends || [];
           
-          onSnapshot(locationsQuery, (snapshot) => {
-            snapshot.forEach(doc => {
-              const data = doc.data();
-              setFriends(prev => {
-                const newFriends = prev.filter(f => f.phoneNumber !== phone);
-                return [...newFriends, {
-                  id: doc.id,
-                  phoneNumber: phone,
-                  coordinates: data.coordinates,
-                  timestamp: data.timestamp
-                }];
+          // Subscribe to each friend's location
+          friendPhones.forEach(phone => {
+            const locationsQuery = query(
+              collection(db, 'locations'),
+              where('phoneNumber', '==', phone)
+            );
+            
+            onSnapshot(locationsQuery, (snapshot) => {
+              snapshot.forEach(doc => {
+                const data = doc.data();
+                setFriends(prev => {
+                  const newFriends = prev.filter(f => f.phoneNumber !== phone);
+                  return [...newFriends, {
+                    id: doc.id,
+                    phoneNumber: phone,
+                    position: {
+                      lat: data.coordinates.latitude,
+                      lng: data.coordinates.longitude,
+                    },
+                    timestamp: data.timestamp,
+                  }];
+                });
               });
             });
           });
-        });
-      }
-    });
+        }
+      });
+    } catch (error) {
+      console.error('Error loading friends:', error);
+      setError('Error loading friends locations');
+    }
   };
 
   const formatTimeAgo = (timestamp) => {
@@ -317,14 +340,49 @@ export default function Home() {
           </button>
         </div>
         {error && <p className={styles.error}>{error}</p>}
+        <LoadScript googleMapsApiKey="AIzaSyAsPfXeYaCl4pY_jafVihLi2CAJ9gpIC5I">
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={center}
+            zoom={12}
+          >
+            {friends.map((friend) => (
+              <Marker
+                key={friend.id}
+                position={friend.position}
+                onClick={() => setSelectedFriend(friend)}
+              />
+            ))}
+
+            {selectedFriend && (
+              <InfoWindow
+                position={selectedFriend.position}
+                onCloseClick={() => setSelectedFriend(null)}
+              >
+                <div className={styles.infoWindow}>
+                  <h3>{selectedFriend.phoneNumber}</h3>
+                  <p>Updated: {formatTimeAgo(selectedFriend.timestamp)}</p>
+                  <p>
+                    Location: {selectedFriend.position.lat.toFixed(6)}°N,{' '}
+                    {selectedFriend.position.lng.toFixed(6)}°W
+                  </p>
+                </div>
+              </InfoWindow>
+            )}
+          </GoogleMap>
+        </LoadScript>
         <div className={styles.friendList}>
           {friends.map((friend) => (
-            <div key={friend.id} className={styles.friendCard}>
+            <div 
+              key={friend.id} 
+              className={styles.friendCard}
+              onClick={() => setSelectedFriend(friend)}
+            >
               <h3>{friend.phoneNumber}</h3>
               <div className={styles.locationInfo}>
                 <p>
-                  Location: {friend.coordinates.latitude.toFixed(6)}°N,{' '}
-                  {friend.coordinates.longitude.toFixed(6)}°W
+                  Location: {friend.position.lat.toFixed(6)}°N,{' '}
+                  {friend.position.lng.toFixed(6)}°W
                 </p>
                 <p>Updated: {formatTimeAgo(friend.timestamp)}</p>
               </div>
