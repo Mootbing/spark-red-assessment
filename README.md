@@ -30,9 +30,11 @@ This project was developed as part of the Spark Red assessment, focusing on crea
 - **Live Deployment**: Deployed on Vercel
 - **Additional Features**: 
   - Real-time location updates
+  - Interactive map markers
+ 
+#### Soon:tm: Features
   - Time-based location history
   - Friend management system
-  - Interactive map markers
 
 ## Development Time
 - Total development time: ~13 hours
