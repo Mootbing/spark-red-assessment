@@ -16,7 +16,7 @@ const center = {
 
 export default function Map({ friends, selectedFriend, setSelectedFriend }) {
   return (
-    <LoadScript googleMapsApiKey="AIzaSyAByQ8xOI-JOL1z6_K4zsHZcdVTtFHwFH0">
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={center}
