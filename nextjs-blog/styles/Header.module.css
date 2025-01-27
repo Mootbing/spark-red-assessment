@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 2rem;
+}
+
+.signOutButton {
+  width: auto;
+  background: #ff4444;
+  padding: 0.5rem 1rem;
+}
+
+.signOutButton:hover {
+  background: #cc3333;
+} 

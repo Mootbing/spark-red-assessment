@@ -1,0 +1,14 @@
+.infoWindow {
+  padding: 0.5rem;
+}
+
+.infoWindow h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+}
+
+.infoWindow p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #666;
+} 
