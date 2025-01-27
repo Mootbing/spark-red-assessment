@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { auth, db } from '../nextjs-blog/firebase/configfig';
+import { auth, db } from '../firebase/config';
 import { signOut } from 'firebase/auth';
 import { doc, onSnapshot } from 'firebase/firestore';
-import Map from '../nextjs-blog/components/MapMap';
-import FriendList from '../nextjs-blog/components/FriendListist';
-import Header from '../nextjs-blog/components/Headerder';
+import Map from '../components/Map';
+import FriendList from '../components/FriendList';
+import Header from '../components/Header';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
-import { auth } from '../nextjs-blog/firebase/configfig';
+import { auth } from '../firebase/config';
 import { 
   signInWithPhoneNumber, 
   RecaptchaVerifier,

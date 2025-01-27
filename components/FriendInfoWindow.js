@@ -1,5 +1,5 @@
 import { InfoWindow } from '@react-google-maps/api';
-import { formatTimeAgo } from '../../utils/time';
+import { formatTimeAgo } from '../utils/time';
 import styles from '../styles/FriendInfoWindow.module.css';
 
 export default function FriendInfoWindow({ friend, onClose }) {

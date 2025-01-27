@@ -1,4 +1,4 @@
-import { formatTimeAgo } from '../../utils/time';
+import { formatTimeAgo } from '../utils/time';
 import styles from '../styles/FriendCard.module.css';
 
 export default function FriendCard({ friend, onClick }) {
