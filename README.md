@@ -1,7 +1,8 @@
 # Poke App Online
 
 Video demo:
-[https://youtu.be/arJ3ayy0uI8](https://youtu.be/arJ3ayy0uI8)
+
+https://github.com/user-attachments/assets/7f9395a6-3a21-461c-8c99-ca43904a5a68
 
 A real-time location sharing app built with Next.js and Firebase. This app allows users to share their location with friends and see their friends' locations in real-time on an interactive map.
 
